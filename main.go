@@ -18,6 +18,9 @@ func main() {
 	ConnectDatabase()
 }
 
+func TranslateWord(input string) (output string) {
+}
+
 func ConsoleReader() {
 	reader := bufio.NewReader(os.Stdin)
 	input, err := reader.ReadString('\n')

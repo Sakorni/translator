@@ -12,11 +12,6 @@ func DetectLocale(word string) (string, error) {
 
 	letter := []rune(word)[0]
 
-	detect := 'А'
-	detect2 := 'A'
-
-	detect, detect2 = detect2, detect
-
 	if !unicode.IsLetter(letter) {
 		return "", fmt.Errorf("Word %s started not with a letter", word)
 	}

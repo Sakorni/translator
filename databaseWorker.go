@@ -29,11 +29,10 @@ func ConnectDatabase() {
 		log.Fatal(pingerr)
 	}
 	fmt.Println("Connected")
-	word, err := getWord(RU_LOCALE, "привет")
+	word, err := getWord(RU_LOCALE, "абракадабра")
 	fmt.Println(word, " ", err)
 	word, err = getWord(EN_LOCALE, "hello")
 	fmt.Println(word, " ", err)
-
 }
 
 //Returns a word translation from database
@@ -55,7 +54,21 @@ func getWord(locale, input string) (word DBWord, err error) {
 	row = db.QueryRow(queryText, input)
 	if err = row.Scan(&word.ID, &word.EnTranslation, &word.RuTranslation, &word.AppealCounter); err != nil {
 		return
-
 	}
+	incrementCount(int(word.ID))
 	return
+}
+
+func incrementCount(id int) (err error) {
+	_, err = db.Exec("UPDATE dictionary SET appeal_count = appeal_count + 1 WHERE id = ?", id)
+	return
+}
+
+func addWord(ruTranslation, enTranslation string) error {
+	_, err := db.Exec("INSERT INTO dictionary (en, ru, appeal_count) VALUES (?, ?, ?)", enTranslation, ruTranslation, 1)
+	if err != nil {
+		return err
+	}
+	return nil
+
 }
