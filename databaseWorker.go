@@ -9,6 +9,8 @@ import (
 	"github.com/go-sql-driver/mysql"
 )
 
+const EMPTY_RESULT_CAPTION = "sql: no rows in result set"
+
 var db *sql.DB
 
 func ConnectDatabase() {
@@ -28,15 +30,11 @@ func ConnectDatabase() {
 	if pingerr != nil {
 		log.Fatal(pingerr)
 	}
-	fmt.Println("Connected")
-	word, err := getWord(RU_LOCALE, "абракадабра")
-	fmt.Println(word, " ", err)
-	word, err = getWord(EN_LOCALE, "hello")
-	fmt.Println(word, " ", err)
+	fmt.Println("Connected to database")
 }
 
 //Returns a word translation from database
-func getWord(locale, input string) (word DBWord, err error) {
+func GetWord(locale, input string) (word DBWord, err error) {
 	var condition string
 	switch locale {
 	case RU_LOCALE:
@@ -60,11 +58,11 @@ func getWord(locale, input string) (word DBWord, err error) {
 }
 
 func incrementCount(id int) (err error) {
-	_, err = db.Exec("UPDATE dictionary SET appeal_count = appeal_count + 1 WHERE id = ?", id)
+	db.Exec("UPDATE dictionary SET appeal_count = appeal_count + 1 WHERE id = ?", id)
 	return
 }
 
-func addWord(ruTranslation, enTranslation string) error {
+func AddWord(ruTranslation, enTranslation string) error {
 	_, err := db.Exec("INSERT INTO dictionary (en, ru, appeal_count) VALUES (?, ?, ?)", enTranslation, ruTranslation, 1)
 	if err != nil {
 		return err

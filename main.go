@@ -14,22 +14,63 @@ type DBWord struct {
 	AppealCounter int64
 }
 
+/*
+Returns a correct result for translating function.
+
+For example: If you've typed a word in RU language it'll
+return you an English translation of this words and vice versa
+*/
+func (word DBWord) GetResult(locale string) string {
+	if locale == RU_LOCALE {
+		return word.EnTranslation
+	}
+	return word.RuTranslation
+}
+
 func main() {
 	ConnectDatabase()
+	ConsoleReader()
 }
 
 func TranslateWord(input string) (output string) {
+	originalLocale, translateLocale, err := GetTargetLocale(input)
+
+	if err != nil {
+		return err.Error()
+	}
+	word, err := GetWord(originalLocale, input)
+	if err == nil {
+		return word.GetResult(originalLocale)
+	} else {
+		if err.Error() == EMPTY_RESULT_CAPTION {
+			res, translationErr := TranslateText(translateLocale, input)
+			if translationErr != nil {
+				return translationErr.Error()
+			}
+			res = strings.ToLower(res)
+			if originalLocale == RU_LOCALE {
+				AddWord(input, res)
+			} else {
+				AddWord(res, input)
+			}
+			return res
+		}
+		return err.Error()
+	}
 }
 
 func ConsoleReader() {
 	reader := bufio.NewReader(os.Stdin)
-	input, err := reader.ReadString('\n')
-	if err != nil {
-		//Todo: do something, idk
-	}
-	input = strings.ToLower(input)
-	locale, err := GetTargetLocale(input)
+	for {
+		fmt.Print("Insert the word which you want to translate: ")
+		input, err := reader.ReadString('\n')
+		if err != nil {
+			fmt.Printf("Invalid input!\n %s\n", err.Error())
+		}
+		input = strings.Trim(input, " \n")
 
-	tr, err := TranslateText(locale, input)
-	fmt.Println(tr, err)
+		res := TranslateWord(input)
+
+		fmt.Printf("%s -> %s\n", input, res)
+	}
 }

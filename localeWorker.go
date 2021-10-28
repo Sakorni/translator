@@ -25,12 +25,12 @@ func DetectLocale(word string) (string, error) {
 	return "", fmt.Errorf("Can't define a locale of a word {%s}.", word)
 }
 
-func GetTargetLocale(word string) (locale string, err error) {
-	locale, err = DetectLocale(word)
+func GetTargetLocale(word string) (originalLocale, translateLocale string, err error) {
+	originalLocale, err = DetectLocale(word)
 	if err != nil {
 		return
 	}
-	locale = targetLocale(locale)
+	translateLocale = targetLocale(originalLocale)
 	return
 }
 
