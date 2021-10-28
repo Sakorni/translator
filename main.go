@@ -1,43 +1,38 @@
 package main
 
 import (
-	"context"
 	"fmt"
-
-	"cloud.google.com/go/translate"
-	"golang.org/x/text/language"
-	"google.golang.org/api/option"
+	"unicode"
 )
 
+const EN_LOCALE = "En"
+const RU_LOCALE = "Ru"
+
 func main() {
-	tr, err := translateText("Ru", "cute")
+	word := "a"
+	DetectLocale(string(word))
+	tr, err := TranslateText("Ru", "cute")
 	fmt.Println(tr, err)
 
 }
 
-func translateText(targetLanguage, text string) (string, error) {
-	// text := "The Go Gopher is cute"
-	ctx := context.Background()
+func DetectLocale(word string) (string, error) {
 
-	opt := option.WithCredentialsFile("secrets/translateKey.json")
+	letter := rune(word[0])
 
-	lang, err := language.Parse(targetLanguage)
-	if err != nil {
-		return "", fmt.Errorf("language.Parse: %v", err)
+	detect := 'a'
+
+	detect++
+
+	if !unicode.IsLetter(letter) {
+		return "", fmt.Errorf("Words are should start with a letter")
 	}
 
-	client, err := translate.NewClient(ctx, opt)
-	if err != nil {
-		return "", err
+	if letter >= 'A' && letter <= 'Z' || letter >= 'a' && letter <= 'z' {
+		return EN_LOCALE, nil
 	}
-	defer client.Close()
-
-	resp, err := client.Translate(ctx, []string{text}, lang, nil)
-	if err != nil {
-		return "", fmt.Errorf("Translate: %v", err)
+	if letter >= 'А' && letter <= 'Я' || letter >= 'а' && letter <= 'я' {
+		return RU_LOCALE, nil
 	}
-	if len(resp) == 0 {
-		return "", fmt.Errorf("Translate returned empty response to text: %s", text)
-	}
-	return resp[0].Text, nil
+	return "", fmt.Errorf("Can't define a locale of a word {%s}.", word)
 }
