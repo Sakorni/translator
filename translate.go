@@ -27,13 +27,15 @@ func TranslateText(targetLanguage, text string) (string, error) {
 
 	resp, err := client.Translate(ctx, []string{text}, lang, nil)
 
-	fmt.Println(client.SupportedLanguages(ctx, lang))
-
 	if err != nil {
 		return "", fmt.Errorf("Translate: %v", err)
 	}
 	if len(resp) == 0 {
 		return "", fmt.Errorf("Translate returned empty response to text: %s", text)
+	}
+	var res string
+	for _, r := range resp {
+		res += r.Text + "\n"
 	}
 	return resp[0].Text, nil
 }
