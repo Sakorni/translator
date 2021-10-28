@@ -5,6 +5,9 @@ import (
 	"unicode"
 )
 
+const EN_LOCALE = "En"
+const RU_LOCALE = "Ru"
+
 func DetectLocale(word string) (string, error) {
 
 	letter := []rune(word)[0]

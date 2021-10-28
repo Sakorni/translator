@@ -4,17 +4,29 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strings"
 )
 
-const EN_LOCALE = "En"
-const RU_LOCALE = "Ru"
+type DBWord struct {
+	ID            int64
+	EnTranslation string
+	RuTranslation string
+	AppealCounter int64
+}
 
 func main() {
+	ConnectDatabase()
+}
+
+func ConsoleReader() {
 	reader := bufio.NewReader(os.Stdin)
 	input, err := reader.ReadString('\n')
+	if err != nil {
+		//Todo: do something, idk
+	}
+	input = strings.ToLower(input)
 	locale, err := GetTargetLocale(input)
 
 	tr, err := TranslateText(locale, input)
 	fmt.Println(tr, err)
-
 }
