@@ -9,7 +9,8 @@ const EN_LOCALE = "En"
 const RU_LOCALE = "Ru"
 
 func main() {
-	word := "a"
+	word := "Аа"
+
 	DetectLocale(string(word))
 	tr, err := TranslateText("Ru", "cute")
 	fmt.Println(tr, err)
@@ -18,20 +19,21 @@ func main() {
 
 func DetectLocale(word string) (string, error) {
 
-	letter := rune(word[0])
+	letter := []rune(word)[0]
 
-	detect := 'a'
+	detect := 'А'
+	detect2 := 'A'
 
-	detect++
+	detect, detect2 = detect2, detect
 
 	if !unicode.IsLetter(letter) {
-		return "", fmt.Errorf("Words are should start with a letter")
+		return "", fmt.Errorf("Word %s started not with a letter", word)
 	}
 
 	if letter >= 'A' && letter <= 'Z' || letter >= 'a' && letter <= 'z' {
 		return EN_LOCALE, nil
 	}
-	if letter >= 'А' && letter <= 'Я' || letter >= 'а' && letter <= 'я' {
+	if letter >= 'А' && letter <= 'Я' || letter >= 'а' && letter <= 'я' || letter == 'Ё' || letter == 'ё' {
 		return RU_LOCALE, nil
 	}
 	return "", fmt.Errorf("Can't define a locale of a word {%s}.", word)
