@@ -43,13 +43,12 @@ func GetWord(locale, input string) (word DBWord, err error) {
 		condition = "en"
 	default:
 		{
-			err = fmt.Errorf("Incorrect locale (recieved {%s})", locale)
+			err = fmt.Errorf("incorrect locale (recieved {%s})", locale)
 			return
 		}
 	}
 	queryText := fmt.Sprintf("SELECT * FROM dictionary WHERE %s=?", condition)
-	var row *sql.Row
-	row = db.QueryRow(queryText, input)
+	row := db.QueryRow(queryText, input)
 	if err = row.Scan(&word.ID, &word.EnTranslation, &word.RuTranslation, &word.AppealCounter); err != nil {
 		return
 	}

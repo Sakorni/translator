@@ -32,6 +32,23 @@ func main() {
 	ConsoleReader()
 }
 
+func ConsoleReader() {
+	scan := bufio.NewScanner(os.Stdin)
+
+	for {
+
+		fmt.Print("Insert the word which you want to translate: ")
+		scan.Scan()
+		input := scan.Text()
+		os.Stdout.Sync()
+		input = strings.ToLower(strings.Trim(input, " \n"))
+
+		res := TranslateWord(input)
+
+		fmt.Printf("%s -> %s \n", input, res)
+	}
+}
+
 func TranslateWord(input string) (output string) {
 	originalLocale, translateLocale, err := GetTargetLocale(input)
 
@@ -56,21 +73,5 @@ func TranslateWord(input string) (output string) {
 			return res
 		}
 		return err.Error()
-	}
-}
-
-func ConsoleReader() {
-	reader := bufio.NewReader(os.Stdin)
-	for {
-		fmt.Print("Insert the word which you want to translate: ")
-		input, err := reader.ReadString('\n')
-		if err != nil {
-			fmt.Printf("Invalid input!\n %s\n", err.Error())
-		}
-		input = strings.Trim(input, " \n")
-
-		res := TranslateWord(input)
-
-		fmt.Printf("%s -> %s\n", input, res)
 	}
 }

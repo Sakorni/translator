@@ -28,10 +28,10 @@ func TranslateText(targetLanguage, text string) (string, error) {
 	resp, err := client.Translate(ctx, []string{text}, lang, nil)
 
 	if err != nil {
-		return "", fmt.Errorf("Translate: %v", err)
+		return "", fmt.Errorf("translate: %v", err)
 	}
 	if len(resp) == 0 {
-		return "", fmt.Errorf("Translate returned empty response to text: %s", text)
+		return "", fmt.Errorf("translate returned empty response to text: %s", text)
 	}
 	var res string
 	for _, r := range resp {
