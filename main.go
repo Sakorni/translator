@@ -33,15 +33,17 @@ func main() {
 }
 
 func ConsoleReader() {
-	scan := bufio.NewScanner(os.Stdin)
 
+	reader := bufio.NewReader(os.Stdin)
 	for {
 
 		fmt.Print("Insert the word which you want to translate: ")
-		scan.Scan()
-		input := scan.Text()
+		input, err := reader.ReadString('\n')
 		os.Stdout.Sync()
-		input = strings.ToLower(strings.Trim(input, " \n"))
+		if err != nil {
+			fmt.Printf("Invalid input!\n %s\n", err.Error())
+		}
+		input = strings.ToLower(strings.Trim(input, " \r\n"))
 
 		res := TranslateWord(input)
 
