@@ -43,7 +43,7 @@ func ConsoleReader() {
 		if err != nil {
 			fmt.Printf("Invalid input!\n %s\n", err.Error())
 		}
-		input = strings.ToLower(strings.Trim(input, " \r\n"))
+		input = strings.ToLower(strings.TrimSpace(input))
 
 		res := TranslateWord(input)
 
