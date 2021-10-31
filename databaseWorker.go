@@ -13,7 +13,7 @@ const EMPTY_RESULT_CAPTION = "sql: no rows in result set"
 
 var db *sql.DB
 
-func ConnectDatabase() {
+func init() {
 	cfg := mysql.Config{
 		User:   os.Getenv("DBUSER"),
 		Passwd: os.Getenv("DBPASS"),

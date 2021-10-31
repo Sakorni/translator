@@ -28,7 +28,6 @@ func (word DBWord) GetResult(locale string) string {
 }
 
 func main() {
-	ConnectDatabase()
 	ConsoleReader()
 }
 
